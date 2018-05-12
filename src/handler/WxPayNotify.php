@@ -2,8 +2,7 @@
 namespace wechatpay\handler;
 // 回调基础类
 use wechatpay\base\WxPayNotifyReply;
-// 这个可以不引入，因为调用此类的时候一般会引入此类 
-// use wechatpay\WxPayApi;  
+use wechatpay\WxPayApi;  
 
 /**
  * 

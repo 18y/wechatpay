@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/base.php';  
+use wechatpay\base\WxPayOrderQuery;
 use wechatpay\WxPayApi;
 use wechatpay\handler\WxPayNotify;  
 use wechatpay\handler\Log;
 use wechatpay\face\CLogFileHandler;
+
 /**
  * 重写 WxPayNotify 的处理函数 NotifyProcess
  * 微信各种验证成功之后会带着参数访问  NotifyProcess 方法，具体看 wechatpay\handler\WxPayNotify

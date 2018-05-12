@@ -12,9 +12,16 @@ use wechatpay\JsApiPay;
 
 //①、获取用户openid
 $tools = new JsApiPay();
-// $openId = $tools->GetOpenid();
-$openId = "";
-$notify_url = "192.168.0.99/example/notify.php";
+/* 
+	获取用户 openId 默认这一步骤重静默授权一次，并获取到临时的 access_token, 
+	因为整个支付都是不需要 access_token  的，但是获取共享收货地址时需要
+	如不需要共享地址可以直接赋值
+	如:
+	$openId = !empty(SESSION['openid']) ? SESSION['openid'] : $tools->GetOpenid();
+*
+*/
+$openId = $tools->GetOpenid();
+$notify_url = "http://192.168.0.99/example/notify.php";
 //②、统一下单
 $input = new WxPayUnifiedOrder();
 $input->SetBody("test");
@@ -37,9 +44,9 @@ if($order['return_code'] == 'FAIL')
 }
 // 生成 Js 支付参数
 $jsApiParameters = $tools->GetJsApiParameters($order);
-
+//editAddress 此接口已被微信废弃，请勿使用
 //获取共享收货地址js函数参数
-$editAddress = $tools->GetEditAddressParameters();
+// $editAddress = $tools->GetEditAddressParameters();
 
 //③、在支持成功回调通知中处理成功之后的事宜，见 notify.php
 /**
@@ -65,6 +72,13 @@ $editAddress = $tools->GetEditAddressParameters();
 			function(res){
 				WeixinJSBridge.log(res.err_msg);
 				alert(res.err_code+res.err_desc+res.err_msg);
+                // 支付调用成功
+                // if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                //     window.location.href = "";
+                // } else {
+                //     alert('交易取消');
+                //     window.location.href = "";
+                // }
 			}
 		);
 	}
@@ -82,39 +96,6 @@ $editAddress = $tools->GetEditAddressParameters();
 		    jsApiCall();
 		}
 	}
-	</script>
-	<script type="text/javascript">
-	//获取共享地址
-	function editAddress()
-	{
-		WeixinJSBridge.invoke(
-			'editAddress',
-			<?php echo $editAddress; ?>,
-			function(res){
-				var value1 = res.proviceFirstStageName;
-				var value2 = res.addressCitySecondStageName;
-				var value3 = res.addressCountiesThirdStageName;
-				var value4 = res.addressDetailInfo;
-				var tel = res.telNumber;
-				
-				alert(value1 + value2 + value3 + value4 + ":" + tel);
-			}
-		);
-	}
-	
-	window.onload = function(){
-		if (typeof WeixinJSBridge == "undefined"){
-		    if( document.addEventListener ){
-		        document.addEventListener('WeixinJSBridgeReady', editAddress, false);
-		    }else if (document.attachEvent){
-		        document.attachEvent('WeixinJSBridgeReady', editAddress); 
-		        document.attachEvent('onWeixinJSBridgeReady', editAddress);
-		    }
-		}else{
-			editAddress();
-		}
-	};
-	
 	</script>
 </head>
 <body>
