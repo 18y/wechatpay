@@ -6,22 +6,15 @@ use wechatpay\WxPayApi;
 use wechatpay\WxPayConfig;
 // 统一下单输入对象
 use wechatpay\base\WxPayUnifiedOrder;
-
 // JSAPI支付实现类
 use wechatpay\JsApiPay;  
+$tools = new JsApiPay();
 
 //①、获取用户openid
-$tools = new JsApiPay();
-/* 
-	获取用户 openId 默认这一步骤重静默授权一次，并获取到临时的 access_token, 
-	因为整个支付都是不需要 access_token  的，但是获取共享收货地址时需要
-	如不需要共享地址可以直接赋值
-	如:
-	$openId = !empty(SESSION['openid']) ? SESSION['openid'] : $tools->GetOpenid();
-*
-*/
+// $openId = !empty($_SESSION['openid']) ? $_SESSION['openid'] : $tools->GetOpenid();
 $openId = $tools->GetOpenid();
-$notify_url = "http://192.168.0.99/example/notify.php";
+// 填写自己的回调地址
+$notify_url = "http://paysdk.weixin.qq.com/example/notify.php";
 //②、统一下单
 $input = new WxPayUnifiedOrder();
 $input->SetBody("test");
