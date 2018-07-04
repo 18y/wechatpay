@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__ . '/base.php';
+// 支付配置
+use wechatpay\WxPayConfig;
 // APi
 use wechatpay\WxPayApi;  
 // 退款对象
 use wechatpay\base\WxPayRefund;
-
 function printf_info($data)
 {
     foreach($data as $key=>$value){
